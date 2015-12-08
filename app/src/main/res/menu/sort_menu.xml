@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="Sort By"
+        android:orderInCategory="100"
+        android:id="@+id/sort_menu">
+
+        <menu>
+            <item
+                android:title="Popularity"
+                android:orderInCategory="100"
+                app:showAsAction="always"
+                android:id="@+id/menu_item_one"/>
+
+            <item
+                android:title="Rating"
+                android:orderInCategory="100"
+                app:showAsAction="always"
+                android:id="@+id/menu_item_two"/>
+        </menu>
+    </item>
+
+    <item
+        android:title="Refresh"
+        android:orderInCategory="100"
+        android:id="@+id/menu_refresh" />
+</menu>

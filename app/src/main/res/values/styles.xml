@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CardContent" parent="android:Widget">
+        <item name="android:background">@color/colorPrimaryContent</item>
+        <item name="android:shadowColor">@color/colorPrimaryDark</item>
+        <item name="android:shadowRadius">10</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+
+    </style>
+
+    <style name="MovieDetailCard" parent="android:Widget">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/detail_card_view_margin</item>
+        <item name="android:layout_marginLeft">@dimen/detail_card_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/detail_card_view_margin_right</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/colorPrimaryContent</item>
+    </style>
+
+    <style name="MovieDetailTitle" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/colorDetailContent</item>
+        <item name="android:padding">@dimen/text_padding_8dp</item>
+    </style>
+
+    <style name="MovieDetailContent" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/colorDetailContent</item>
+        <item name="android:padding">@dimen/text_padding_8dp</item>
+    </style>
+
+    <style name="MovieDetailContentOnDark" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/colorDetailContentOnDark</item>
+        <item name="android:padding">@dimen/text_padding_8dp</item>
+    </style>
+
+
+
+</resources>
