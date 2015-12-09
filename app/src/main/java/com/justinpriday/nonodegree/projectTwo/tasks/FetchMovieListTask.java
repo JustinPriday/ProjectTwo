@@ -1,13 +1,13 @@
-package com.justinpriday.nonodegree.projectone1.tasks;
+package com.justinpriday.nonodegree.projectTwo.tasks;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.justinpriday.nonodegree.projectone1.BuildConfig;
-import com.justinpriday.nonodegree.projectone1.MovieGridFragment;
-import com.justinpriday.nonodegree.projectone1.models.MovieData;
+import com.justinpriday.nonodegree.projectTwo.BuildConfig;
+import com.justinpriday.nonodegree.projectTwo.MovieGridFragment;
+import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 
 import org.json.JSONArray;
 import org.json.JSONException;

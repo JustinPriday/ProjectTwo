@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1.adapter;
+package com.justinpriday.nonodegree.projectTwo.adapter;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.justinpriday.nonodegree.projectone1.R;
-import com.justinpriday.nonodegree.projectone1.models.MovieData;
+import com.justinpriday.nonodegree.projectTwo.R;
+import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

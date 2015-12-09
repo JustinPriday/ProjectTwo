@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1;
+package com.justinpriday.nonodegree.projectTwo;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
+import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1;
+package com.justinpriday.nonodegree.projectTwo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,10 +19,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.justinpriday.nonodegree.projectone1.adapter.MovieAdapter;
-import com.justinpriday.nonodegree.projectone1.models.MovieData;
-import com.justinpriday.nonodegree.projectone1.tasks.FetchMovieListTask;
-import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
+import com.justinpriday.nonodegree.projectTwo.adapter.MovieAdapter;
+import com.justinpriday.nonodegree.projectTwo.models.MovieData;
+import com.justinpriday.nonodegree.projectTwo.tasks.FetchMovieListTask;
+import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import java.util.ArrayList;
 

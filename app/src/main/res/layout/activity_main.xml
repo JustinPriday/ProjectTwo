@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context="com.justinpriday.nonodegree.projectone1.MainActivity">
+    tools:context="com.justinpriday.nonodegree.projectTwo.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/movie_grid_fragment"
-        android:name="com.justinpriday.nonodegree.projectone1.MovieGridFragment"
+        android:name="com.justinpriday.nonodegree.projectTwo.MovieGridFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"

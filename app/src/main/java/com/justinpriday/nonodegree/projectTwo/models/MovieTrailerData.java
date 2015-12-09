@@ -1,10 +1,10 @@
-package com.justinpriday.nonodegree.projectone1.models;
+package com.justinpriday.nonodegree.projectTwo.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
+import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1.util;
+package com.justinpriday.nonodegree.projectTwo.util;
 
 /**
  * Created by justin on 15/11/30.

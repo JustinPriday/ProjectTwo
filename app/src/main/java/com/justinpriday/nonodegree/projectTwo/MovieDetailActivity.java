@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1;
+package com.justinpriday.nonodegree.projectTwo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

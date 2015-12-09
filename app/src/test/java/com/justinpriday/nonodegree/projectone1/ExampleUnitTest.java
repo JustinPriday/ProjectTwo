@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1;
+package com.justinpriday.nonodegree.projectTwo;
 
 import org.junit.Test;
 

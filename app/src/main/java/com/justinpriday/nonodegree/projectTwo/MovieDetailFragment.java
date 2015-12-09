@@ -1,4 +1,4 @@
-package com.justinpriday.nonodegree.projectone1;
+package com.justinpriday.nonodegree.projectTwo;
 
 
 import android.graphics.Bitmap;
@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
-import com.justinpriday.nonodegree.projectone1.models.MovieData;
-import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
+import com.justinpriday.nonodegree.projectTwo.models.MovieData;
+import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
