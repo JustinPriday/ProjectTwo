@@ -26,12 +26,17 @@ import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MovieGridFragment extends Fragment {
 
     private static final String LOG_TAG = MovieGridFragment.class.getSimpleName();
 
     private ArrayList<MovieData> mMovieList = null;
     private MovieAdapter mMovieAdaptor;
+
+    @Bind(R.id.movie_overview_grid) GridView mGridView;
 
     public MovieGridFragment() {
         // Required empty public constructor
@@ -93,13 +98,14 @@ public class MovieGridFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_movie_grid, container, false);
 
+        ButterKnife.bind(this, view);
+
         if (mMovieList == null) {
             mMovieAdaptor = new MovieAdapter(getActivity(),new ArrayList<MovieData>());
         } else {
             mMovieAdaptor = new MovieAdapter(getActivity(),mMovieList);
         }
 
-        GridView mGridView = (GridView) view.findViewById(R.id.movie_overview_grid);
         mGridView.setAdapter(mMovieAdaptor);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

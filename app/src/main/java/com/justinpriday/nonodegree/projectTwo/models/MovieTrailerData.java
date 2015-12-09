@@ -30,6 +30,13 @@ public class MovieTrailerData implements Parcelable {
         this.trailerSite = in.readInt();
     }
 
+    public MovieTrailerData(String inTitle,String inKey) {
+        this.id = "";
+        this.trailerTitle = inTitle;
+        this.trailerKey = inKey;
+        this.trailerSite = 1;
+    }
+
     public MovieTrailerData(JSONObject inJSON) {
         try {
             this.id = inJSON.getString(MDBConsts.MOVIE_TRAILER_ID);
@@ -72,6 +79,16 @@ public class MovieTrailerData implements Parcelable {
             case 1:
                 return MDBConsts.MOVIE_TRAILER_YOUTUBE_THUMBNAIL_URL + this.trailerKey + "/"
                         + MDBConsts.MOVIE_TRAILER_YOUTUBE_THUMBNAIL_VERSION;
+            default:
+                return null;
+        }
+    }
+
+    public String getTrailerURL() {
+        switch (this.trailerSite) {
+            case 1:
+                return MDBConsts.MOVIE_TRAILER_YOUTUBE_URL + this.trailerKey;
+
             default:
                 return null;
         }

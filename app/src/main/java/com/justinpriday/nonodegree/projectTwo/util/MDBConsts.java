@@ -26,6 +26,7 @@ public class MDBConsts {
     private static final String[] MOVIE_TRAILER_SITES = {"YouTube"};
     public static final String MOVIE_TRAILER_YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/";
     public static final String MOVIE_TRAILER_YOUTUBE_THUMBNAIL_VERSION = "default.jpg";
+    public static final String MOVIE_TRAILER_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
     public static final String MOVIE_REVIEW_ID = "id";
     public static final String MOVIE_REVIEW_AUTHOR = "author";

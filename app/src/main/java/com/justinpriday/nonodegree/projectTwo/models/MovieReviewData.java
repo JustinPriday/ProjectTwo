@@ -37,6 +37,11 @@ public class MovieReviewData implements Parcelable {
         }
     }
 
+    public MovieReviewData(String inAuthor,String inContent) {
+        this.reviewAuthor = inAuthor;
+        this.reviewContent = inContent;
+    }
+
     public static final Creator<MovieReviewData> CREATOR = new Creator<MovieReviewData>() {
         @Override
         public MovieReviewData createFromParcel(Parcel in) {

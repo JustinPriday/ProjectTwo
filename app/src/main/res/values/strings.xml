@@ -2,6 +2,8 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="movie_detail_overview_heading">Synopsis</string>
+    <string name="movie_detail_trailer_heading">Trailers</string>
+    <string name="movie_detail_review_heading">Reviews</string>
 
     <string name="grid_view_menu_sort_by_text">Sort By</string>
     <string name="grid_view_menu_sort_by_popularity_text">Popularity</string>
