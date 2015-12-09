@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import org.json.JSONException;
@@ -17,8 +18,12 @@ public class MovieTrailerData implements Parcelable {
     private static final String LOG_TAG = MovieTrailerData.class.getSimpleName();
 
     public String id; //Unique String ID of video from MDB
+    @SerializedName("name")
     public String trailerTitle;
+    @SerializedName("key")
     public String trailerKey; //Unique Identifier of video on site
+    @SerializedName("site")
+    public String trailerSiteName;
     public int trailerSite; //Internal Key for site, based on URL parsing support. Unsupported sites rejected at API receipt stage.
     //1=Youtube
 

@@ -1,8 +1,10 @@
 package com.justinpriday.nonodegree.projectTwo;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -22,9 +24,11 @@ import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.justinpriday.nonodegree.projectTwo.API.MDBApi;
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieReviewData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieTrailerData;
+import com.justinpriday.nonodegree.projectTwo.models.MovieTrailers;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 import com.squareup.picasso.Picasso;
 
@@ -35,8 +39,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements Callback<MovieTrailers> {
 
     private static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
@@ -90,39 +99,12 @@ public class MovieDetailFragment extends Fragment {
             tBar.setDisplayShowHomeEnabled(true);
         }
 
-//        if (getActivity() != null) {
-//            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        }
-
         ctb.setTitle(mMovieItem.originalTitle);
         ctb.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         ctb.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
         Picasso.with(getActivity())
                 .load(mMovieItem.getPosterURL())
-                .into(moviePoster, new com.squareup.picasso.Callback() {
-
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) moviePoster.getDrawable()).getBitmap();
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                //This often doesn't look nice, I've considered returning to colorPrimary to tie in with
-                                //surrounding bars, but left the poster palette code because its more interesting.
-//                                bgMutedColor = palette.getMutedColor(0x000000);
-//                                GradientDrawable bgBorder = (GradientDrawable) moviePoster.getBackground();
-//                                bgBorder.setColor(bgMutedColor);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
+                .into(moviePoster);
 
         Log.v(LOG_TAG, "Got Backdrop URL " + mMovieItem.getBackdropURL());
         Picasso.with(getActivity())
@@ -171,11 +153,24 @@ public class MovieDetailFragment extends Fragment {
         mReviewList = new ArrayList<>(Arrays.asList(rList));
         updateReviews(mReviewList);
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(MDBConsts.MDB_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MDBApi mdbApi = retrofit.create(MDBApi.class);
+
+        Call<MovieTrailers> call = mdbApi.getTrailersResults(mMovieItem.id,BuildConfig.THE_MOVIE_DB_API_KEY);
+
+        call.enqueue(this);
+
         return rootView;
     }
 
     private void trailerSelected(String trailerURL) {
-        Toast.makeText(getContext(),trailerURL+" Selected",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(),trailerURL+" Selected",Toast.LENGTH_SHORT).show();
+        Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
+        youTubeIntent.putExtra("force_fullscreen", true);
+        startActivity(youTubeIntent);
     }
 
     private void updateTrailers(List<MovieTrailerData> trailerList) {
@@ -204,7 +199,7 @@ public class MovieDetailFragment extends Fragment {
             trailerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    trailerSelected(trailer.trailerTitle);
+                    trailerSelected(trailer.getTrailerURL());
                 }
             });
             trailerListLayout.addView(trailerView);
@@ -230,5 +225,19 @@ public class MovieDetailFragment extends Fragment {
             reviewAuthor.setText(review.reviewAuthor);
             reviewListLayout.addView(reviewView);
         }
+    }
+
+    @Override
+    public void onResponse(Response<MovieTrailers> response, Retrofit retrofit) {
+        Log.v(LOG_TAG,"Got Result");
+        List<MovieTrailerData> tMovieList = response.body().results;
+        for (MovieTrailerData trailer : tMovieList)
+            trailer.trailerSite = MDBConsts.GET_SITE_ID(trailer.trailerSiteName);
+        updateTrailers(response.body().results);
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+
     }
 }

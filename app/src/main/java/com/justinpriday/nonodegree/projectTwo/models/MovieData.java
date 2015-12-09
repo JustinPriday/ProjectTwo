@@ -26,7 +26,7 @@ public class MovieData implements Parcelable {
     private static final String MDB_BACKDROP_SIZE = "w342";
 
 
-    private long id;
+    public long id;
     public String originalTitle;
     public String overview;
     private String releaseDate;

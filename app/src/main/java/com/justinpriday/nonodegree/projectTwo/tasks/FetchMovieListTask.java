@@ -117,7 +117,6 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
 
             movieJSONString = buffer.toString();
             movieList = getMovieDataFromJSON(movieJSONString);
-//            getMovieDataFromJSON(movieJSONString);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error", e);
         } catch (JSONException e) {

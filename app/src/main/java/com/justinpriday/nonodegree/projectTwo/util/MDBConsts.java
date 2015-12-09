@@ -4,6 +4,8 @@ package com.justinpriday.nonodegree.projectTwo.util;
  * Created by justin on 15/11/30.
  */
 public class MDBConsts {
+    public static final String MDB_BASE_URL = "http://api.themoviedb.org/";
+
     public static final String MOVIE_DATE_FORMAT = "yyyy-MM-dd";
 
     public static final String MOVIE_ID = "id";
