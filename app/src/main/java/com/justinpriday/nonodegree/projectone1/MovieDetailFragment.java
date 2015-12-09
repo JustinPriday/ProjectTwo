@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,25 +23,18 @@ import com.justinpriday.nonodegree.projectone1.models.MovieData;
 import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static android.support.v4.content.ContextCompat.getColor;
-
-
-/**
- * A simple {@link Fragment} subclass.
- */
+@SuppressWarnings("WeakerAccess")
 public class MovieDetailFragment extends Fragment {
 
     private static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
-    MovieData mMovieItem = null;
-    Bitmap mMoviePoster = null;
+    private MovieData mMovieItem = null;
+//    private Bitmap mMoviePoster = null;
 
     private int mutedColor;
     private int bgMutedColor;
@@ -62,8 +55,8 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMovieItem = (MovieData) getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_DATA_KEY);
-        mMoviePoster = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_POSTER);
+        mMovieItem = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_DATA_KEY);
+//        mMoviePoster = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_POSTER);
     }
 
     @Override
@@ -72,13 +65,20 @@ public class MovieDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
         Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar tBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (tBar != null) {
+            tBar.setDisplayHomeAsUpEnabled(true);
+            tBar.setDisplayShowHomeEnabled(true);
+        }
 
+//        if (getActivity() != null) {
+//            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        }
 
         ctb.setTitle(mMovieItem.originalTitle);
         ctb.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);

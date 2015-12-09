@@ -21,15 +21,19 @@ public class MovieData implements Parcelable {
 
     private final String LOG_TAG = MovieData.class.getSimpleName();
 
+    private static final String MDB_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    private static final String MDB_POSTER_SIZE = "w185";
+    private static final String MDB_BACKDROP_SIZE = "w342";
 
-    public long id;
+
+    private long id;
     public String originalTitle;
     public String overview;
-    public String releaseDate;
-    public String posterPath;
-    public String backdropPath;
+    private String releaseDate;
+    private String posterPath;
+    private String backdropPath;
     public double voteAverage;
-    public int voteCount;
+    private int voteCount;
     public double popularity;
 
     public Date getFormattedDate() {
@@ -38,22 +42,17 @@ public class MovieData implements Parcelable {
             try {
                 return simpleDateFormat.parse(releaseDate);
             } catch (ParseException e) {
-                Log.e("MovieData", "getFormattedDate() returned error: " + e);
+                Log.e(LOG_TAG, "getFormattedDate() returned error: " + e);
             }
         }
         return null;
     }
 
-    public MovieData() {
+    private MovieData() {
 
     }
 
-    public MovieData(int id, String name) {
-        this.id = id;
-        this.originalTitle = name;
-    }
-
-    protected MovieData(Parcel in) {
+    private MovieData(Parcel in) {
         this.id = in.readLong();
         this.originalTitle = in.readString();
         this.overview = in.readString();
@@ -82,13 +81,11 @@ public class MovieData implements Parcelable {
     }
 
     public String getPosterURL () {
-        String posterURL = "http://image.tmdb.org/t/p/" + "w185/" + this.posterPath;
-        return posterURL;
+        return MDB_IMAGE_URL + MDB_POSTER_SIZE + "/" + this.posterPath;
     }
 
     public String getBackdropURL () {
-        String backdropURL = "http://image.tmdb.org/t/p/" + "w342/" + this.backdropPath;
-        return backdropURL;
+        return MDB_IMAGE_URL + MDB_BACKDROP_SIZE + "/" + this.backdropPath;
     }
 
     @Override

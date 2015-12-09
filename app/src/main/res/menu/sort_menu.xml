@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="Sort By"
+        android:title="@string/grid_view_menu_sort_by_text"
         android:orderInCategory="100"
         android:id="@+id/sort_menu">
 
         <menu>
             <item
-                android:title="Popularity"
+                android:title="@string/grid_view_menu_sort_by_popularity_text"
                 android:orderInCategory="100"
                 app:showAsAction="always"
                 android:id="@+id/menu_item_one"/>
 
             <item
-                android:title="Rating"
+                android:title="@string/grid_view_menu_sort_by_rating_text"
                 android:orderInCategory="100"
                 app:showAsAction="always"
                 android:id="@+id/menu_item_two"/>
@@ -22,7 +22,7 @@
     </item>
 
     <item
-        android:title="Refresh"
+        android:title="@string/grid_view_menu_refresh_text"
         android:orderInCategory="100"
         android:id="@+id/menu_refresh" />
 </menu>

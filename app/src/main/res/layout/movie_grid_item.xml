@@ -15,15 +15,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:transitionName="posterImageView"
             android:foreground="@drawable/poster_placeholder"
+            android:contentDescription="@string/grid_item_movie_poster_description"
             android:layout_margin="0dp"/>
 
         <LinearLayout
             android:id="@+id/grid_item_bar_container"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:background="@color/colorPrimaryTransluscent"
+            android:background="@color/colorPrimaryTranslucent"
             android:layout_margin="0dp"
             android:gravity="bottom"
             android:layout_gravity="bottom|center_horizontal"
@@ -51,8 +51,7 @@
                     android:textSize="10sp"
                     android:layout_marginRight="4dp"
                     android:layout_gravity="center"
-                    android:gravity="left"
-                    android:text="1234"/>
+                    android:gravity="left"/>
 
             </LinearLayout>
 
@@ -78,8 +77,7 @@
                     android:textSize="10sp"
                     android:layout_marginRight="4dp"
                     android:layout_gravity="center"
-                    android:gravity="left"
-                    android:text="1234"/>
+                    android:gravity="left"/>
 
             </LinearLayout>
         </LinearLayout>

@@ -1,14 +1,11 @@
 package com.justinpriday.nonodegree.projectone1.tasks;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.justinpriday.nonodegree.projectone1.BuildConfig;
-import com.justinpriday.nonodegree.projectone1.MainActivity;
 import com.justinpriday.nonodegree.projectone1.MovieGridFragment;
 import com.justinpriday.nonodegree.projectone1.models.MovieData;
 
@@ -42,7 +39,7 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
     private ArrayList<MovieData> movieList = null;
 
 
-    public FetchMovieListTask(Context context) {
+    private FetchMovieListTask(Context context) {
         mContext = context;
         mMoviesCallback = null;
     }
@@ -61,7 +58,7 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
         JSONObject movieJSON = new JSONObject(movieJSONString);
         JSONArray movieArray = movieJSON.getJSONArray(MDB_LIST);
 
-        ArrayList<MovieData> movieList = new ArrayList<MovieData>();
+        ArrayList<MovieData> movieList = new ArrayList<>();
 
         for (int i = 0; i < movieArray.length(); i++) {
             MovieData aMovie = new MovieData(movieArray.getJSONObject(i));
@@ -79,9 +76,9 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        String movieJSONString = null;
+        String movieJSONString;
 
-        movieList = new ArrayList<MovieData>();
+        movieList = new ArrayList<>();
 
         try {
 
@@ -102,7 +99,7 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 return null;
             }
@@ -111,7 +108,7 @@ public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieD
 
             String line;
             while((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {

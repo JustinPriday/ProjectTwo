@@ -1,12 +1,9 @@
 package com.justinpriday.nonodegree.projectone1;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -28,30 +25,21 @@ import com.justinpriday.nonodegree.projectone1.tasks.FetchMovieListTask;
 import com.justinpriday.nonodegree.projectone1.util.MDBConsts;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MovieGridFragment extends Fragment {
 
-    public static final String LOG_TAG = MovieGridFragment.class.getSimpleName();
+    private static final String LOG_TAG = MovieGridFragment.class.getSimpleName();
 
     private ArrayList<MovieData> mMovieList = null;
     private MovieAdapter mMovieAdaptor;
-    private GridView mGridView = null;
 
     public MovieGridFragment() {
         // Required empty public constructor
     }
 
-    public static MovieGridFragment newInstance(String param1, String param2) {
-        MovieGridFragment fragment = new MovieGridFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-
-        } else {
+        if (savedInstanceState != null) {
             mMovieList = savedInstanceState.getParcelableArrayList(MDBConsts.MOVIE_BUNDLE_PARCELABLE_KEY);
         }
         super.onCreate(savedInstanceState);
@@ -61,7 +49,7 @@ public class MovieGridFragment extends Fragment {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY, inPref);
-        editor.commit();
+        editor.apply();
         return null;
     }
 
@@ -111,7 +99,7 @@ public class MovieGridFragment extends Fragment {
             mMovieAdaptor = new MovieAdapter(getActivity(),mMovieList);
         }
 
-        mGridView = (GridView) view.findViewById(R.id.movie_overview_grid);
+        GridView mGridView = (GridView) view.findViewById(R.id.movie_overview_grid);
         mGridView.setAdapter(mMovieAdaptor);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -138,7 +126,7 @@ public class MovieGridFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        ArrayList<MovieData> saveArray = new ArrayList<MovieData>();
+        ArrayList<MovieData> saveArray = new ArrayList<>();
         for (int i = 0;i < mMovieAdaptor.getCount();i++) {
             saveArray.add(mMovieAdaptor.getItem(i));
         }
@@ -160,30 +148,23 @@ public class MovieGridFragment extends Fragment {
     }
 
     public interface GotMoviesCallback {
-        public void movieListTaskDone(ArrayList<MovieData> movieList);
+        void movieListTaskDone(ArrayList<MovieData> movieList);
     }
 
-    public void gotNewMovies(ArrayList<MovieData> newMovies) {
+    private void gotNewMovies(ArrayList<MovieData> newMovies) {
         Log.v(LOG_TAG,"Got "+newMovies.size()+" new movies");
         mMovieList = newMovies;
         Log.v(LOG_TAG, mMovieList.size() + " Items from task");
 
         mMovieAdaptor.clear();
 
-        if (newMovies != null){
-            for (MovieData aMovie : newMovies) {
-                mMovieAdaptor.insert(aMovie, mMovieAdaptor.getCount());
-            }
+        for (MovieData aMovie : newMovies) {
+            mMovieAdaptor.insert(aMovie, mMovieAdaptor.getCount());
         }
         mMovieAdaptor.notifyDataSetChanged();
         if (getContext() != null) {
             Toast.makeText(getContext(), "Movie List Updated", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimaryLight">#303030</color>
     <color name="colorPrimaryContent">#424242</color>
-    <color name="colorPrimaryTransluscent">#88212121</color>
+    <color name="colorPrimaryTranslucent">#88212121</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorDetailContent">#757575</color>
