@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class MovieData implements Parcelable {
 
-    private final String LOG_TAG = MovieData.class.getSimpleName();
+    private static final String LOG_TAG = MovieData.class.getSimpleName();
 
     private static final String MDB_IMAGE_URL = "http://image.tmdb.org/t/p/";
     private static final String MDB_POSTER_SIZE = "w185";
