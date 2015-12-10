@@ -1,8 +1,7 @@
 package com.justinpriday.nonodegree.projectTwo.API;
 
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
-import com.justinpriday.nonodegree.projectTwo.models.MovieReviewData;
-import com.justinpriday.nonodegree.projectTwo.models.MovieTrailerData;
+import com.justinpriday.nonodegree.projectTwo.models.MovieReviews;
 import com.justinpriday.nonodegree.projectTwo.models.MovieTrailers;
 
 import java.util.List;
@@ -23,5 +22,5 @@ public interface MDBApi {
     Call<MovieTrailers> getTrailersResults(@Path("id") long movieId, @Query("api_key") String apiKey);
 
     @GET("/3/movie/{id}/reviews")
-    Call<List<MovieReviewData>> getReviewsResults(@Path("id") long movieId, @Query("api_key") String apiKey);
+    Call<MovieReviews> getReviewsResults(@Path("id") long movieId, @Query("api_key") String apiKey);
 }

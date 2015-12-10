@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import org.json.JSONException;
@@ -17,7 +18,9 @@ public class MovieReviewData implements Parcelable {
     private static final String LOG_TAG = MovieReviewData.class.getSimpleName();
 
     public String id;
+    @SerializedName("author")
     public String reviewAuthor;
+    @SerializedName("content")
     public String reviewContent;
 
     protected MovieReviewData(Parcel in) {

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.justinpriday.nonodegree.projectTwo.API.MDBApi;
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieReviewData;
+import com.justinpriday.nonodegree.projectTwo.models.MovieReviews;
 import com.justinpriday.nonodegree.projectTwo.models.MovieTrailerData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieTrailers;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
@@ -45,7 +46,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MovieDetailFragment extends Fragment implements Callback<MovieTrailers> {
+public class MovieDetailFragment extends Fragment {
 
     private static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
@@ -143,15 +144,9 @@ public class MovieDetailFragment extends Fragment implements Callback<MovieTrail
             yearText.setText(String.valueOf(calendar.get(Calendar.YEAR)));
         }
 
-        MovieTrailerData[] tList = {new MovieTrailerData("Trailer1","Y0LKWt3Ttic"),
-            new MovieTrailerData("Trailer 2","Y0LKWt3Ttic")};
-        mTrailerList = new ArrayList<>(Arrays.asList(tList));
-        updateTrailers(mTrailerList);
+        updateTrailers(new ArrayList<MovieTrailerData>());
 
-        MovieReviewData[] rList = {new MovieReviewData("Author 1","Content 1")
-            ,new MovieReviewData("Author 2","Content 2")};
-        mReviewList = new ArrayList<>(Arrays.asList(rList));
-        updateReviews(mReviewList);
+        updateReviews(new ArrayList<MovieReviewData>());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(MDBConsts.MDB_BASE_URL)
@@ -159,9 +154,36 @@ public class MovieDetailFragment extends Fragment implements Callback<MovieTrail
                 .build();
         MDBApi mdbApi = retrofit.create(MDBApi.class);
 
-        Call<MovieTrailers> call = mdbApi.getTrailersResults(mMovieItem.id,BuildConfig.THE_MOVIE_DB_API_KEY);
+        Call<MovieTrailers> trailersCall = mdbApi.getTrailersResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
+        Callback<MovieTrailers> trailersCallback = new Callback<MovieTrailers>() {
+            @Override
+            public void onResponse(Response<MovieTrailers> response, Retrofit retrofit) {
+                List<MovieTrailerData> tMovieList = response.body().results;
+                for (MovieTrailerData trailer : tMovieList)
+                    trailer.trailerSite = MDBConsts.GET_SITE_ID(trailer.trailerSiteName);
+                updateTrailers(response.body().results);
+            }
 
-        call.enqueue(this);
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        };
+        trailersCall.enqueue(trailersCallback);
+
+        Call<MovieReviews> reviewsCall = mdbApi.getReviewsResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
+        Callback<MovieReviews> reviewsCallBack = new Callback<MovieReviews>() {
+            @Override
+            public void onResponse(Response<MovieReviews> response, Retrofit retrofit) {
+                updateReviews(response.body().results);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        };
+        reviewsCall.enqueue(reviewsCallBack);
 
         return rootView;
     }
@@ -175,69 +197,69 @@ public class MovieDetailFragment extends Fragment implements Callback<MovieTrail
 
     private void updateTrailers(List<MovieTrailerData> trailerList) {
 
-        final LayoutInflater inflater = LayoutInflater.from(getActivity());
-
         trailerListLayout.removeAllViews();
 
-        if (mTrailerList.size() > 0) {
-            trailerCard.setVisibility(View.VISIBLE);
+        if (trailerList != null) {
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            if (trailerList.size() > 0) {
+                trailerCard.setVisibility(View.VISIBLE);
+            } else {
+                trailerCard.setVisibility(View.GONE);
+            }
+
+            for (final MovieTrailerData trailer : trailerList) {
+                final View trailerView = inflater.inflate(R.layout.movie_detail_trailer_item, trailerListLayout, false);
+                ImageView trailerImage = ButterKnife.findById(trailerView, R.id.trailer_item_image);
+                TextView trailerTitle = ButterKnife.findById(trailerView, R.id.trailer_item_title);
+
+                Picasso.with(getActivity())
+                        .load(trailer.getTrailerThumbURL())
+                        .into(trailerImage);
+
+                trailerTitle.setText(trailer.trailerTitle);
+
+                trailerView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        trailerSelected(trailer.getTrailerURL());
+                    }
+                });
+                trailerListLayout.addView(trailerView);
+            }
         } else {
             trailerCard.setVisibility(View.GONE);
-        }
-
-        for (final MovieTrailerData trailer : trailerList) {
-            final View trailerView = inflater.inflate(R.layout.movie_detail_trailer_item, trailerListLayout, false);
-            ImageView trailerImage = ButterKnife.findById(trailerView, R.id.trailer_item_image);
-            TextView trailerTitle = ButterKnife.findById(trailerView, R.id.trailer_item_title);
-
-            Picasso.with(getActivity())
-                    .load(trailer.getTrailerThumbURL())
-                    .into(trailerImage);
-
-            trailerTitle.setText(trailer.trailerTitle);
-
-            trailerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    trailerSelected(trailer.getTrailerURL());
-                }
-            });
-            trailerListLayout.addView(trailerView);
         }
     }
 
     private void updateReviews(List<MovieReviewData> reviewList) {
 
-        final LayoutInflater inflater = LayoutInflater.from(getActivity());
-
         reviewListLayout.removeAllViews();
 
-        if (mReviewList.size() > 0) {
-            reviewCard.setVisibility(View.VISIBLE);
+        if (reviewList != null) {
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+            if (reviewList.size() > 0) {
+                reviewCard.setVisibility(View.VISIBLE);
+            } else {
+                reviewCard.setVisibility(View.GONE);
+            }
+
+            Boolean firstItem = true;
+            for (final MovieReviewData review : reviewList) {
+                final View reviewView = inflater.inflate(R.layout.movie_detail_review_item, reviewListLayout, false);
+
+                View divideTop = ButterKnife.findById(reviewView, R.id.review_item_top_divide);
+                TextView reviewAuthor = ButterKnife.findById(reviewView, R.id.review_item_author);
+                TextView reviewContent = ButterKnife.findById(reviewView, R.id.review_item_content);
+
+                divideTop.setVisibility(firstItem?View.GONE:View.VISIBLE);
+                reviewAuthor.setText(review.reviewAuthor);
+                reviewContent.setText(review.reviewContent);
+                reviewListLayout.addView(reviewView);
+                firstItem = false;
+            }
         } else {
             reviewCard.setVisibility(View.GONE);
         }
-
-        for (final MovieReviewData review : reviewList) {
-            final View reviewView = inflater.inflate(R.layout.movie_detail_review_item, reviewListLayout, false);
-            TextView reviewAuthor = ButterKnife.findById(reviewView, R.id.review_item_author);
-
-            reviewAuthor.setText(review.reviewAuthor);
-            reviewListLayout.addView(reviewView);
-        }
-    }
-
-    @Override
-    public void onResponse(Response<MovieTrailers> response, Retrofit retrofit) {
-        Log.v(LOG_TAG,"Got Result");
-        List<MovieTrailerData> tMovieList = response.body().results;
-        for (MovieTrailerData trailer : tMovieList)
-            trailer.trailerSite = MDBConsts.GET_SITE_ID(trailer.trailerSiteName);
-        updateTrailers(response.body().results);
-    }
-
-    @Override
-    public void onFailure(Throwable t) {
-
     }
 }
