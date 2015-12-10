@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -66,6 +68,8 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.movie_detail_rating_text_view) TextView ratingText;
     @Bind(R.id.movie_detail_synopsys_data_text_view) TextView overviewText;
     @Bind(R.id.movie_detail_year_text_view) TextView yearText;
+
+    @Bind(R.id.favourite_fab) FloatingActionButton favouriteFab;
 
     @Bind(R.id.movie_detail_trailer_card_view) CardView trailerCard;
     @Bind(R.id.movie_detail_trailer_list) LinearLayout trailerListLayout;
@@ -186,6 +190,11 @@ public class MovieDetailFragment extends Fragment {
         reviewsCall.enqueue(reviewsCallBack);
 
         return rootView;
+    }
+
+    @OnClick(R.id.favourite_fab)
+    public void favouriteFabClicked() {
+        Toast.makeText(getContext(),"FAB Clicked",Toast.LENGTH_SHORT).show();
     }
 
     private void trailerSelected(String trailerURL) {
