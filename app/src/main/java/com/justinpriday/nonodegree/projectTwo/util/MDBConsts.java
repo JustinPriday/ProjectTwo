@@ -38,6 +38,7 @@ public class MDBConsts {
     public static final String MOVIE_SORT_POPULARITY = "popularity.desc";
     public static final String MOVIE_SORT_RATING = "vote_average.desc";
     public static final String MOVIE_SORT_DEFAULT = "popularity.desc";
+    public static final String MOVIE_SORT_FAVOURITES = "favourites";
 
     public static final String MOVIE_BUNDLE_PARCELABLE_KEY = "popular_movies_list_key";
 

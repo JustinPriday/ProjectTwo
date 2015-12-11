@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import org.json.JSONException;
@@ -27,12 +28,18 @@ public class MovieData implements Parcelable {
 
 
     public long id;
+    @SerializedName("original_title")
     public String originalTitle;
     public String overview;
+    @SerializedName("release_date")
     private String releaseDate;
+    @SerializedName("poster_path")
     private String posterPath;
+    @SerializedName("backdrop_path")
     private String backdropPath;
+    @SerializedName("vote_average")
     public double voteAverage;
+    @SerializedName("cover_count")
     private int voteCount;
     public double popularity;
 
