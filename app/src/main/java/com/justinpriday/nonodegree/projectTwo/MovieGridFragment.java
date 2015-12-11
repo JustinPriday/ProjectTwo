@@ -36,6 +36,10 @@ public class MovieGridFragment extends Fragment {
     private ArrayList<MovieData> mMovieList = null;
     private MovieAdapter mMovieAdaptor;
 
+    public interface CallBack {
+        void OnItemSelected(MovieData movieItem, Bitmap moviePoster);
+    }
+
     @Bind(R.id.movie_overview_grid) GridView mGridView;
 
     public MovieGridFragment() {
@@ -111,17 +115,18 @@ public class MovieGridFragment extends Fragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(),MovieDetailActivity.class);
+//                Intent intent = new Intent(getActivity(),MovieDetailActivity.class);
                 ImageView posterImage = (ImageView)view.findViewById(R.id.grid_item_image_poster);
                 Bitmap bitmap = ((BitmapDrawable)posterImage.getDrawable()).getBitmap();
-                if (bitmap != null) {
-                    intent.putExtra(MDBConsts.MOVIE_POSTER_BITMAP_KEY,bitmap);
-                }
+//                if (bitmap != null) {
+//                    intent.putExtra(MDBConsts.MOVIE_POSTER_BITMAP_KEY,bitmap);
+//                }
                 MovieData movieItem = mMovieList.get(position);
-                if (movieItem != null) {
-                    intent.putExtra(MDBConsts.MOVIE_DATA_KEY,movieItem);
-                    startActivity(intent);
-                }
+//                if (movieItem != null) {
+//                    intent.putExtra(MDBConsts.MOVIE_DATA_KEY,movieItem);
+//                    startActivity(intent);
+//                }
+                ((CallBack)getActivity()).OnItemSelected(movieItem,bitmap);
             }
         });
 

@@ -35,7 +35,6 @@ import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,14 +51,10 @@ public class MovieDetailFragment extends Fragment {
 
     private static final String LOG_TAG = MovieDetailActivity.class.getSimpleName();
 
-    private ArrayList<MovieTrailerData> mTrailerList = null;
-    private ArrayList <MovieReviewData> mReviewList = null;
-
     private MovieData mMovieItem = null;
-//    private Bitmap mMoviePoster = null;
+    private boolean mSingleView = true;
 
     private int mutedColor;
-    private int bgMutedColor;
 
     @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout ctb;
     @Bind(R.id.movie_detail_poster_image_view) ImageView moviePoster;
@@ -84,8 +79,14 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMovieItem = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_DATA_KEY);
-//        mMoviePoster = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_POSTER);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mMovieItem = arguments.getParcelable(MDBConsts.MOVIE_DATA_KEY);
+            mSingleView = false;
+        } else if (getActivity().getIntent().getExtras() != null) {
+            mMovieItem = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_DATA_KEY);
+            mSingleView = true;
+        }
     }
 
     @Override
@@ -100,8 +101,8 @@ public class MovieDetailFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ActionBar tBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (tBar != null) {
-            tBar.setDisplayHomeAsUpEnabled(true);
-            tBar.setDisplayShowHomeEnabled(true);
+            tBar.setDisplayHomeAsUpEnabled(mSingleView);
+            tBar.setDisplayShowHomeEnabled(mSingleView);
         }
 
         ctb.setTitle(mMovieItem.originalTitle);
@@ -198,7 +199,6 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void trailerSelected(String trailerURL) {
-//        Toast.makeText(getContext(),trailerURL+" Selected",Toast.LENGTH_SHORT).show();
         Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
         youTubeIntent.putExtra("force_fullscreen", true);
         startActivity(youTubeIntent);

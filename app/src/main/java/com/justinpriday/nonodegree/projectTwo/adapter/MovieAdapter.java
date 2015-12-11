@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.justinpriday.nonodegree.projectTwo.MovieGridFragment;
 import com.justinpriday.nonodegree.projectTwo.R;
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 import com.squareup.picasso.Picasso;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
  * Created by justin on 15/11/27.
  */
 public class MovieAdapter extends ArrayAdapter<MovieData> {
+
 
     public MovieAdapter(Activity context, List<MovieData> movieData) {
         super(context, 0, movieData);

@@ -256,7 +256,7 @@
         android:clickable="true"
         android:layout_margin="16dp"
         android:src="@drawable/movie_icon_popular"
-        app:backgroundTint="#BBFF4081"
+        app:backgroundTint="@color/colorAccentTranslucent"
         app:elevation="6dp"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right" />
