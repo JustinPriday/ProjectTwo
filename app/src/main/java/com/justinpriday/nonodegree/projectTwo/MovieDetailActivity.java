@@ -13,7 +13,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
 
-        Toolbar topToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar topToolbar = (Toolbar) findViewById(R.id.toolbarDetail);
         setSupportActionBar(topToolbar);
     }
 

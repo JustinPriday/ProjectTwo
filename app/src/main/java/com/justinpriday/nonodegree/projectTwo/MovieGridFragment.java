@@ -72,21 +72,26 @@ public class MovieGridFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_one : {
-                Log.v(LOG_TAG,"Menu Item One Selected");
+            case R.id.menu_item_popularity : {
                 setSortPreference(MDBConsts.MOVIE_SORT_POPULARITY);
                 updateMovies();
                 break;}
 
-            case R.id.menu_item_two: {
-                Log.v(LOG_TAG, "Menu Item Two Selected");
+            case R.id.menu_item_rating: {
                 setSortPreference(MDBConsts.MOVIE_SORT_RATING);
                 updateMovies();
+                break;}
+
+            case R.id.menu_item_favourites: {
+                Log.v(LOG_TAG, "User favourites selected");
                 break;}
 
             case R.id.menu_refresh: {
                 updateMovies();
                 break;}
+
+            default:
+                Log.e(LOG_TAG,"Unknown menu item selected");
         }
 
         SharedPreferences x = PreferenceManager.getDefaultSharedPreferences(getContext());

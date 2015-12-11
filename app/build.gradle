@@ -23,7 +23,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', '"[MDB AKI Key]"'
+        it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', '"[MDB API key]"'
     }
 }
 

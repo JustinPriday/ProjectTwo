@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -97,12 +96,14 @@ public class MovieDetailFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ActionBar tBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (tBar != null) {
-            tBar.setDisplayHomeAsUpEnabled(mSingleView);
-            tBar.setDisplayShowHomeEnabled(mSingleView);
+        if (mSingleView) {
+            Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.toolbarDetail);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            ActionBar tBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (tBar != null) {
+                tBar.setDisplayHomeAsUpEnabled(mSingleView);
+                tBar.setDisplayShowHomeEnabled(mSingleView);
+            }
         }
 
         ctb.setTitle(mMovieItem.originalTitle);

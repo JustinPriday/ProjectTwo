@@ -11,13 +11,19 @@
                 android:title="@string/grid_view_menu_sort_by_popularity_text"
                 android:orderInCategory="100"
                 app:showAsAction="always"
-                android:id="@+id/menu_item_one"/>
+                android:id="@+id/menu_item_popularity"/>
 
             <item
                 android:title="@string/grid_view_menu_sort_by_rating_text"
                 android:orderInCategory="100"
                 app:showAsAction="always"
-                android:id="@+id/menu_item_two"/>
+                android:id="@+id/menu_item_rating"/>
+
+            <item
+                android:title="@string/grid_view_menu_sort_by_favourites_text"
+                android:orderInCategory="100"
+                app:showAsAction="always"
+                android:id="@+id/menu_item_favourites"/>
         </menu>
     </item>
 

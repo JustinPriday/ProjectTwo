@@ -4,10 +4,12 @@
     <string name="movie_detail_overview_heading">Synopsis</string>
     <string name="movie_detail_trailer_heading">Trailers</string>
     <string name="movie_detail_review_heading">Reviews</string>
+    <string name="movie_not_selected_string">Select a Movie</string>
 
     <string name="grid_view_menu_sort_by_text">Sort By</string>
     <string name="grid_view_menu_sort_by_popularity_text">Popularity</string>
     <string name="grid_view_menu_sort_by_rating_text">Rating</string>
+    <string name="grid_view_menu_sort_by_favourites_text">Favourites</string>
     <string name="grid_view_menu_refresh_text">Refresh</string>
 
     <string name="grid_item_movie_poster_description">Movie Poster</string>
