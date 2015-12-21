@@ -1,7 +1,10 @@
 package com.justinpriday.nonodegree.projectTwo;
 
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -16,6 +19,9 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.justinpriday.nonodegree.projectTwo.API.MDBApi;
+import com.justinpriday.nonodegree.projectTwo.Data.MovieContract;
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieReviewData;
 import com.justinpriday.nonodegree.projectTwo.models.MovieReviews;
@@ -52,6 +59,12 @@ public class MovieDetailFragment extends Fragment {
 
     private MovieData mMovieItem = null;
     private boolean mSingleView = true;
+    private boolean mMovieFavourited = false;
+
+    //Lists for instance saving on rotation
+    private ArrayList<MovieReviewData> mMovieReviewList = null;
+    private ArrayList<MovieTrailerData> mMovieTrailerList = null;
+
 
     private int mutedColor;
 
@@ -70,10 +83,46 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.movie_detail_review_card_view) CardView reviewCard;
     @Bind(R.id.movie_detail_review_list) LinearLayout reviewListLayout;
 
+    @Bind(R.id.toolbarDetail) Toolbar toolbarDetail;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(MDBConsts.REVIEWS_BUNDLE_PARCELABLE_KEY,mMovieReviewList);
+        outState.putParcelableArrayList(MDBConsts.TRAILERS_BUNDLE_PARCELABLE_KEY,mMovieTrailerList);
+
+        super.onSaveInstanceState(outState);
+    }
+
     public MovieDetailFragment() {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.share_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                getActivity().onBackPressed();
+                return true;
+            }
+
+            case R.id.share_movie_trailer: {
+                if (mMovieTrailerList.size() > 0) {
+                    shareTrailerIntent(mMovieTrailerList.get(0));
+                }
+                break;}
+
+            default:
+                Log.e(LOG_TAG,"Unknown menu item selected");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,6 +134,10 @@ public class MovieDetailFragment extends Fragment {
         } else if (getActivity().getIntent().getExtras() != null) {
             mMovieItem = getActivity().getIntent().getExtras().getParcelable(MDBConsts.MOVIE_DATA_KEY);
             mSingleView = true;
+        }
+        if (savedInstanceState != null) {
+            mMovieTrailerList = savedInstanceState.getParcelableArrayList(MDBConsts.TRAILERS_BUNDLE_PARCELABLE_KEY);
+            mMovieReviewList = savedInstanceState.getParcelableArrayList(MDBConsts.REVIEWS_BUNDLE_PARCELABLE_KEY);
         }
     }
 
@@ -104,7 +157,16 @@ public class MovieDetailFragment extends Fragment {
                 tBar.setDisplayHomeAsUpEnabled(mSingleView);
                 tBar.setDisplayShowHomeEnabled(mSingleView);
             }
+            setHasOptionsMenu(false);
         }
+
+        mMovieFavourited = getContext().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{String.format("%d",mMovieItem.id)},
+                null
+                ).moveToFirst();
 
         ctb.setTitle(mMovieItem.originalTitle);
         ctb.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
@@ -144,6 +206,8 @@ public class MovieDetailFragment extends Fragment {
         ratingText.setText(String.format("%.1f / 10",mMovieItem.voteAverage));
         overviewText.setText(mMovieItem.overview);
 
+        favouriteFab.setImageResource(mMovieFavourited?R.drawable.movie_icon_favourite_remove:R.drawable.movie_icon_favourite_add);
+
         if (mMovieItem.getFormattedDate() != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(mMovieItem.getFormattedDate().getTime());
@@ -160,43 +224,75 @@ public class MovieDetailFragment extends Fragment {
                 .build();
         MDBApi mdbApi = retrofit.create(MDBApi.class);
 
-        Call<MovieTrailers> trailersCall = mdbApi.getTrailersResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
-        Callback<MovieTrailers> trailersCallback = new Callback<MovieTrailers>() {
-            @Override
-            public void onResponse(Response<MovieTrailers> response, Retrofit retrofit) {
-                List<MovieTrailerData> tMovieList = response.body().results;
-                for (MovieTrailerData trailer : tMovieList)
-                    trailer.trailerSite = MDBConsts.GET_SITE_ID(trailer.trailerSiteName);
-                updateTrailers(response.body().results);
-            }
+        if (mMovieTrailerList == null) {
+            Call<MovieTrailers> trailersCall = mdbApi.getTrailersResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
+            Callback<MovieTrailers> trailersCallback = new Callback<MovieTrailers>() {
+                @Override
+                public void onResponse(Response<MovieTrailers> response, Retrofit retrofit) {
+                    List<MovieTrailerData> tMovieList = response.body().results;
+                    for (MovieTrailerData trailer : tMovieList)
+                        trailer.trailerSite = MDBConsts.GET_SITE_ID(trailer.trailerSiteName);
+                    updateTrailers(response.body().results);
+                }
 
-            @Override
-            public void onFailure(Throwable t) {
+                @Override
+                public void onFailure(Throwable t) {
 
-            }
-        };
-        trailersCall.enqueue(trailersCallback);
+                }
+            };
+            trailersCall.enqueue(trailersCallback);
+        } else {
+            updateTrailers(mMovieTrailerList);
+        }
 
-        Call<MovieReviews> reviewsCall = mdbApi.getReviewsResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
-        Callback<MovieReviews> reviewsCallBack = new Callback<MovieReviews>() {
-            @Override
-            public void onResponse(Response<MovieReviews> response, Retrofit retrofit) {
-                updateReviews(response.body().results);
-            }
+        if (mMovieReviewList == null) {
+            Call<MovieReviews> reviewsCall = mdbApi.getReviewsResults(mMovieItem.id, BuildConfig.THE_MOVIE_DB_API_KEY);
+            Callback<MovieReviews> reviewsCallBack = new Callback<MovieReviews>() {
+                @Override
+                public void onResponse(Response<MovieReviews> response, Retrofit retrofit) {
+                    mMovieReviewList = response.body().results;
+                    updateReviews(response.body().results);
+                }
 
-            @Override
-            public void onFailure(Throwable t) {
+                @Override
+                public void onFailure(Throwable t) {
 
-            }
-        };
-        reviewsCall.enqueue(reviewsCallBack);
+                }
+            };
+            reviewsCall.enqueue(reviewsCallBack);
+        } else {
+            updateReviews(mMovieReviewList);
+        }
 
         return rootView;
     }
 
     @OnClick(R.id.favourite_fab)
     public void favouriteFabClicked() {
-        Toast.makeText(getContext(),"FAB Clicked",Toast.LENGTH_SHORT).show();
+        if (mMovieFavourited) {
+            int deletedCount = getContext().getContentResolver().delete(
+                    MovieContract.MovieEntry.CONTENT_URI,
+                    MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
+                    new String[]{String.format("%d",mMovieItem.id)}
+                    );
+
+
+            if (deletedCount == 1) {
+                Toast.makeText(getContext(),"Movie Removed From Favourites",Toast.LENGTH_SHORT).show();
+                mMovieFavourited = false;
+            }
+
+        } else {{
+            Uri insertedUri = getContext().getContentResolver().insert(
+                    MovieContract.MovieEntry.CONTENT_URI,
+                    mMovieItem.getContentValues()
+            );
+            if (ContentUris.parseId(insertedUri) == mMovieItem.id) {
+                Toast.makeText(getContext(),"Movie Added To Favourites",Toast.LENGTH_SHORT).show();
+                mMovieFavourited = true;
+            }
+        }}
+        favouriteFab.setImageResource(mMovieFavourited ? R.drawable.movie_icon_favourite_remove : R.drawable.movie_icon_favourite_add);
     }
 
     private void trailerSelected(String trailerURL) {
@@ -205,71 +301,95 @@ public class MovieDetailFragment extends Fragment {
         startActivity(youTubeIntent);
     }
 
+    private void shareTrailerIntent(MovieTrailerData trailer) {
+        if (trailer != null) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, trailer.getTrailerURL());
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mMovieItem.originalTitle);
+            startActivity(Intent.createChooser(intent, getActivity().getString(R.string.share)));
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.v(LOG_TAG,"Destroy Detail Fragment");
+        super.onDestroy();
+    }
+
     private void updateTrailers(List<MovieTrailerData> trailerList) {
+        if (getActivity() != null) {
+            trailerListLayout.removeAllViews();
+            if (trailerList.size() > 0)
+                mMovieTrailerList = new ArrayList<>(trailerList);
 
-        trailerListLayout.removeAllViews();
+            if (trailerList != null) {
+                final LayoutInflater inflater = LayoutInflater.from(getActivity());
+                if (trailerList.size() > 0) {
+                    trailerCard.setVisibility(View.VISIBLE);
+                } else {
+                    trailerCard.setVisibility(View.GONE);
+                }
+                setHasOptionsMenu(trailerList.size() > 0);
 
-        if (trailerList != null) {
-            final LayoutInflater inflater = LayoutInflater.from(getActivity());
-            if (trailerList.size() > 0) {
-                trailerCard.setVisibility(View.VISIBLE);
+                for (final MovieTrailerData trailer : trailerList) {
+                    final View trailerView = inflater.inflate(R.layout.movie_detail_trailer_item, trailerListLayout, false);
+                    ImageView trailerImage = ButterKnife.findById(trailerView, R.id.trailer_item_image);
+                    TextView trailerTitle = ButterKnife.findById(trailerView, R.id.trailer_item_title);
+
+                    Picasso.with(getActivity())
+                            .load(trailer.getTrailerThumbURL())
+                            .into(trailerImage);
+
+                    trailerTitle.setText(trailer.trailerTitle);
+
+                    trailerView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            trailerSelected(trailer.getTrailerURL());
+                        }
+                    });
+                    trailerListLayout.addView(trailerView);
+                }
             } else {
                 trailerCard.setVisibility(View.GONE);
             }
-
-            for (final MovieTrailerData trailer : trailerList) {
-                final View trailerView = inflater.inflate(R.layout.movie_detail_trailer_item, trailerListLayout, false);
-                ImageView trailerImage = ButterKnife.findById(trailerView, R.id.trailer_item_image);
-                TextView trailerTitle = ButterKnife.findById(trailerView, R.id.trailer_item_title);
-
-                Picasso.with(getActivity())
-                        .load(trailer.getTrailerThumbURL())
-                        .into(trailerImage);
-
-                trailerTitle.setText(trailer.trailerTitle);
-
-                trailerView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        trailerSelected(trailer.getTrailerURL());
-                    }
-                });
-                trailerListLayout.addView(trailerView);
-            }
-        } else {
-            trailerCard.setVisibility(View.GONE);
         }
     }
 
     private void updateReviews(List<MovieReviewData> reviewList) {
+        if (getActivity() != null) {
 
-        reviewListLayout.removeAllViews();
+            reviewListLayout.removeAllViews();
+            if (reviewList.size() > 0)
+                mMovieReviewList = new ArrayList<>(reviewList);
 
-        if (reviewList != null) {
-            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+            if (reviewList != null) {
+                final LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-            if (reviewList.size() > 0) {
-                reviewCard.setVisibility(View.VISIBLE);
+                if (reviewList.size() > 0) {
+                    reviewCard.setVisibility(View.VISIBLE);
+                } else {
+                    reviewCard.setVisibility(View.GONE);
+                }
+
+                Boolean firstItem = true;
+                for (final MovieReviewData review : reviewList) {
+                    final View reviewView = inflater.inflate(R.layout.movie_detail_review_item, reviewListLayout, false);
+
+                    View divideTop = ButterKnife.findById(reviewView, R.id.review_item_top_divide);
+                    TextView reviewAuthor = ButterKnife.findById(reviewView, R.id.review_item_author);
+                    TextView reviewContent = ButterKnife.findById(reviewView, R.id.review_item_content);
+
+                    divideTop.setVisibility(firstItem ? View.GONE : View.VISIBLE);
+                    reviewAuthor.setText(review.reviewAuthor);
+                    reviewContent.setText(review.reviewContent);
+                    reviewListLayout.addView(reviewView);
+                    firstItem = false;
+                }
             } else {
                 reviewCard.setVisibility(View.GONE);
             }
-
-            Boolean firstItem = true;
-            for (final MovieReviewData review : reviewList) {
-                final View reviewView = inflater.inflate(R.layout.movie_detail_review_item, reviewListLayout, false);
-
-                View divideTop = ButterKnife.findById(reviewView, R.id.review_item_top_divide);
-                TextView reviewAuthor = ButterKnife.findById(reviewView, R.id.review_item_author);
-                TextView reviewContent = ButterKnife.findById(reviewView, R.id.review_item_content);
-
-                divideTop.setVisibility(firstItem?View.GONE:View.VISIBLE);
-                reviewAuthor.setText(review.reviewAuthor);
-                reviewContent.setText(review.reviewContent);
-                reviewListLayout.addView(reviewView);
-                firstItem = false;
-            }
-        } else {
-            reviewCard.setVisibility(View.GONE);
         }
     }
 }

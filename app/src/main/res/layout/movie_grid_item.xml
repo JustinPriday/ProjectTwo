@@ -36,12 +36,14 @@
                 android:orientation="horizontal"
                 android:padding="2dp">
                 <ImageView
+                    android:id="@+id/grid_item_favourite_icon"
                     android:layout_width="16dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/movie_icon_popular"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:contentDescription="@null"/>
 
                 <TextView
                     android:id="@+id/movie_grid_popularity_text_view"
@@ -51,7 +53,8 @@
                     android:textSize="10sp"
                     android:layout_marginRight="4dp"
                     android:layout_gravity="center"
-                    android:gravity="left"/>
+                    android:gravity="left"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
@@ -67,7 +70,8 @@
                     android:src="@drawable/movie_icon_rated"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:contentDescription="@null"/>
 
                 <TextView
                     android:id="@+id/movie_grid_rating_text_view"

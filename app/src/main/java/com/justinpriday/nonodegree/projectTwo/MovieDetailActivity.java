@@ -29,4 +29,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void setToolbar(Toolbar mToolbar, boolean showHomeUp, boolean showTitle) {
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeUp);
+            getSupportActionBar().setDisplayShowTitleEnabled(showTitle);
+        }
+    }
 }

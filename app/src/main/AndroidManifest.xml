@@ -3,6 +3,7 @@
     package="com.justinpriday.nonodegree.projectTwo">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,16 @@
             </intent-filter>
         </activity>
         <activity android:name="com.justinpriday.nonodegree.projectTwo.MovieDetailActivity"/>
+        <provider
+            android:name=".Data.FavouritesProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"/>
+        <receiver android:name=".util.NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

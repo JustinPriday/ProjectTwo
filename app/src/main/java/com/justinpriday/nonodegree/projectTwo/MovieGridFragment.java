@@ -1,5 +1,6 @@
 package com.justinpriday.nonodegree.projectTwo;
 
+import android.net.Network;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
@@ -18,21 +19,27 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.justinpriday.nonodegree.projectTwo.Loaders.APILoader;
+import com.justinpriday.nonodegree.projectTwo.Loaders.FavouritesLoader;
 import com.justinpriday.nonodegree.projectTwo.adapter.MovieAdapter;
 import com.justinpriday.nonodegree.projectTwo.models.MovieData;
-import com.justinpriday.nonodegree.projectTwo.tasks.FetchMovieListTask;
+//import com.justinpriday.nonodegree.projectTwo.tasks.FetchMovieListTask;
+import com.justinpriday.nonodegree.projectTwo.util.DeviceUtils;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
+import com.justinpriday.nonodegree.projectTwo.util.NetworkChangeReceiver;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MovieGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<MovieData>> {
+public class MovieGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<MovieData>>,NetworkChangeReceiver.NetworkChangeNotification {
 
     private static final String LOG_TAG = MovieGridFragment.class.getSimpleName();
 
@@ -40,6 +47,12 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
 
     private ArrayList<MovieData> mMovieList = null;
     private MovieAdapter mMovieAdaptor;
+
+    @Bind(R.id.no_network_connection)
+    LinearLayout noNetworkView;
+
+    @Bind(R.id.no_movies_available)
+    LinearLayout noMoviesView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -52,20 +65,39 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (mPrefs.getString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY,MDBConsts.MOVIE_SORT_DEFAULT).equals(MDBConsts.MOVIE_SORT_FAVOURITES)) {
              //Favourites Loader
+            return new FavouritesLoader(getActivity());
         } else {
             return new APILoader(getActivity());
         }
-        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<List<MovieData>> loader, List<MovieData> data) {
         gotNewMovies((ArrayList<MovieData>) data);
+
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isFavs = (mPrefs.getString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY,MDBConsts.MOVIE_SORT_DEFAULT).equals(MDBConsts.MOVIE_SORT_FAVOURITES));
+        if ((DeviceUtils.deviceOnline(getContext())) || (isFavs)) {
+            noNetworkView.setVisibility(View.GONE);
+            noMoviesView.setVisibility((((ArrayList<MovieData>) data).size() > 0)?View.GONE:View.VISIBLE);
+        } else {
+            noNetworkView.setVisibility(View.VISIBLE);
+            noMoviesView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<List<MovieData>> loader) {
 
+    }
+
+    @Override
+    public void networkBecameAvailable() {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        noNetworkView.setVisibility(View.GONE);
+        if (!(mPrefs.getString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY, MDBConsts.MOVIE_SORT_DEFAULT).equals(MDBConsts.MOVIE_SORT_FAVOURITES))) {
+            getLoaderManager().restartLoader(0, null, this);
+        }
     }
 
     public interface CallBack {
@@ -107,17 +139,16 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
             case R.id.menu_item_popularity : {
                 setSortPreference(MDBConsts.MOVIE_SORT_POPULARITY);
                 getLoaderManager().restartLoader(0, null, this);
-//                updateMovies();
                 break;}
 
             case R.id.menu_item_rating: {
                 setSortPreference(MDBConsts.MOVIE_SORT_RATING);
                 getLoaderManager().restartLoader(0, null, this);
-//                updateMovies();
                 break;}
 
             case R.id.menu_item_favourites: {
-                Log.v(LOG_TAG, "User favourites selected");
+                setSortPreference(MDBConsts.MOVIE_SORT_FAVOURITES);
+                getLoaderManager().restartLoader(0, null, this);
                 break;}
 
             case R.id.menu_refresh: {
@@ -154,22 +185,18 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getActivity(),MovieDetailActivity.class);
                 ImageView posterImage = (ImageView) view.findViewById(R.id.grid_item_image_poster);
                 Bitmap bitmap = ((BitmapDrawable) posterImage.getDrawable()).getBitmap();
-//                if (bitmap != null) {
-//                    intent.putExtra(MDBConsts.MOVIE_POSTER_BITMAP_KEY,bitmap);
-//                }
                 MovieData movieItem = mMovieList.get(position);
-//                if (movieItem != null) {
-//                    intent.putExtra(MDBConsts.MOVIE_DATA_KEY,movieItem);
-//                    startActivity(intent);
-//                }
                 ((CallBack) getActivity()).OnItemSelected(movieItem, bitmap);
             }
         });
 
         setHasOptionsMenu(true);
+
+        noNetworkView.setVisibility((DeviceUtils.deviceOnline(getContext())) ? View.GONE : View.VISIBLE);
+        NetworkChangeReceiver.setNetworkListener(this);
+
         return view;
     }
 
@@ -185,40 +212,34 @@ public class MovieGridFragment extends Fragment implements LoaderManager.LoaderC
         super.onSaveInstanceState(outState);
     }
 
-    private void updateMovies() {
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String movieListType = mPrefs.getString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY,MDBConsts.MOVIE_SORT_DEFAULT);
-        if (movieListType.equals(MDBConsts.MOVIE_SORT_FAVOURITES)) {
-            //TODO:Collect Movie List from Provider.
-        } else {
-//            FetchMovieListTask movieTask = new FetchMovieListTask(new GotMoviesCallback() {
-//                @Override
-//                public void movieListTaskDone(ArrayList<MovieData> movieList) {
-//                    gotNewMovies(movieList);
-//                }
-//            });
-//            movieTask.execute(mPrefs.getString(MDBConsts.MOVIE_SHARED_PREFERENCE_SORT_KEY, MDBConsts.MOVIE_SORT_DEFAULT));
-        }
+    @OnClick(R.id.jump_to_favourites_button)
+    public void jumpToFavClicked() {
+        setSortPreference(MDBConsts.MOVIE_SORT_FAVOURITES);
+        getLoaderManager().restartLoader(0, null, this);
     }
 
+    private void updateMovies() {
+        getLoaderManager().restartLoader(0, null, this);
+    }
 
     public interface GotMoviesCallback {
         void movieListTaskDone(ArrayList<MovieData> movieList);
     }
 
     private void gotNewMovies(ArrayList<MovieData> newMovies) {
-        Log.v(LOG_TAG,"Got "+newMovies.size()+" new movies");
-        mMovieList = newMovies;
-        Log.v(LOG_TAG, mMovieList.size() + " Items from task");
+        if (newMovies != null) {
+            mMovieList = newMovies;
+            Log.v(LOG_TAG, mMovieList.size() + " Items from task");
 
-        mMovieAdaptor.clear();
+            mMovieAdaptor.clear();
 
-        for (MovieData aMovie : newMovies) {
-            mMovieAdaptor.insert(aMovie, mMovieAdaptor.getCount());
-        }
-        mMovieAdaptor.notifyDataSetChanged();
-        if (getActivity() != null) {
-            Toast.makeText(getActivity(), "Movie List Updated", Toast.LENGTH_SHORT).show();
+            for (MovieData aMovie : newMovies) {
+                mMovieAdaptor.insert(aMovie, mMovieAdaptor.getCount());
+            }
+            mMovieAdaptor.notifyDataSetChanged();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), "Movie List Updated", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

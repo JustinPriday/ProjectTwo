@@ -41,6 +41,9 @@ public class MDBConsts {
     public static final String MOVIE_SORT_FAVOURITES = "favourites";
 
     public static final String MOVIE_BUNDLE_PARCELABLE_KEY = "popular_movies_list_key";
+    public static final String REVIEWS_BUNDLE_PARCELABLE_KEY = "popular_movies_reviews_key";
+    public static final String TRAILERS_BUNDLE_PARCELABLE_KEY = "popular_movies_trailers_key";
+
 
     public static int GET_SITE_ID(String inSite) {
         for (int i = 0;i < MOVIE_TRAILER_SITES.length;i++) {

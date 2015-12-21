@@ -11,7 +11,19 @@
     <string name="grid_view_menu_sort_by_rating_text">Rating</string>
     <string name="grid_view_menu_sort_by_favourites_text">Favourites</string>
     <string name="grid_view_menu_refresh_text">Refresh</string>
+    <string name="grid_no_internet_warning">No Internet Connection</string>
+    <string name="grid_no_internet_favourites_button">Go To Favourites</string>
+    <string name="grid_no_movies_warning">No Movies To Display</string>
 
     <string name="grid_item_movie_poster_description">Movie Poster</string>
+
+    <string name="action_share">Share</string>
+
+    <!--ImageView ContentDescriptions-->
+    <string name="trailer_image_description">Movie Trailer Thumbnail</string>
+    <string name="movie_backdrop_image">Movie Backdrop</string>
+    <string name="movie_poster_image">Movie Poster</string>
+
+    <string name="share">Share</string>
 
 </resources>

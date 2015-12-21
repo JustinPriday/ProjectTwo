@@ -1,11 +1,14 @@
 package com.justinpriday.nonodegree.projectTwo.models;
 
+import android.content.ContentValues;
+import android.graphics.Movie;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+import com.justinpriday.nonodegree.projectTwo.Data.MovieContract;
 import com.justinpriday.nonodegree.projectTwo.util.MDBConsts;
 
 import org.json.JSONException;
@@ -87,6 +90,18 @@ public class MovieData implements Parcelable {
             e.printStackTrace();        }
     }
 
+    public MovieData(ContentValues inVals) {
+        this.id = inVals.getAsInteger(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+        this.originalTitle = inVals.getAsString(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+        this.overview = inVals.getAsString(MovieContract.MovieEntry.COLUMN_OVERVIEW);
+        this.releaseDate = inVals.getAsString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+        this.posterPath = inVals.getAsString(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+        this.backdropPath = inVals.getAsString(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH);
+        this.voteAverage = inVals.getAsDouble(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE);
+        this.voteCount = inVals.getAsInteger(MovieContract.MovieEntry.COLUMN_VOTE_COUNT);
+        this.popularity = inVals.getAsDouble(MovieContract.MovieEntry.COLUMN_POPULARITY);
+    }
+
     public String getPosterURL () {
         return MDB_IMAGE_URL + MDB_POSTER_SIZE + "/" + this.posterPath;
     }
@@ -138,5 +153,21 @@ public class MovieData implements Parcelable {
                 ", voteCount=" + voteCount +
                 ", popularity=" + popularity +
                 "}";
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues rVal = new ContentValues();
+
+        rVal.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID,this.id);
+        rVal.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE,this.originalTitle);
+        rVal.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,this.overview);
+        rVal.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,this.releaseDate);
+        rVal.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH,this.posterPath);
+        rVal.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH,this.backdropPath);
+        rVal.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,this.voteAverage);
+        rVal.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT,this.voteCount);
+        rVal.put(MovieContract.MovieEntry.COLUMN_POPULARITY,this.popularity);
+
+        return rVal;
     }
 }

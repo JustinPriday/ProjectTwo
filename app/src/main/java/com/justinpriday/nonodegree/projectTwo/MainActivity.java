@@ -24,11 +24,13 @@ public class MainActivity extends AppCompatActivity implements MovieGridFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.movie_details_container) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
-        }
+        mTwoPane = (findViewById(R.id.movie_details_container) != null);
+
+//        if (findViewById(R.id.movie_details_container) != null) {
+//            mTwoPane = true;
+//        } else {
+//            mTwoPane = false;
+//        }
         Toolbar topToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(topToolbar);
     }

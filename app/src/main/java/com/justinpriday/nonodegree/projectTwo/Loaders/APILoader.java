@@ -1,6 +1,5 @@
 package com.justinpriday.nonodegree.projectTwo.Loaders;
 
-//import android.content.AsyncTaskLoader;
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.SharedPreferences;

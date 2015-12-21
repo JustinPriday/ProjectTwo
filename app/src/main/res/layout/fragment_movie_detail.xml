@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                android:contentDescription="@string/movie_backdrop_image" />
 
             <View
                 android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                 android:background="@drawable/detail_poster_border"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"
-                android:layout_gravity="left|bottom" />
+                android:layout_gravity="left|bottom"
+                android:contentDescription="@string/movie_poster_image"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarDetail"
@@ -92,7 +94,8 @@
                         android:src="@drawable/movie_icon_popular"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY"
+                        android:contentDescription="@null"/>
 
                     <TextView
                         android:id="@+id/movie_detail_popularity_text_view"
@@ -118,7 +121,8 @@
                         android:src="@drawable/movie_icon_rated"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY"
+                        android:contentDescription="@null"/>
 
                     <TextView
                         android:id="@+id/movie_detail_rating_text_view"
@@ -235,13 +239,11 @@
 
                     <include layout="@layout/divide" />
 
-
                     <LinearLayout
                         android:id="@+id/movie_detail_review_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"/>
-
                 </LinearLayout>
 
 
@@ -255,7 +257,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_margin="16dp"
-        android:src="@drawable/movie_icon_popular"
+        android:src="@drawable/movie_icon_favourite_add"
         app:backgroundTint="@color/colorAccentTranslucent"
         app:elevation="6dp"
         app:layout_anchor="@id/appbar"

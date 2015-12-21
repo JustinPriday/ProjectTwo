@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/movie_overview_grid"
-    android:numColumns="auto_fit"
-    android:gravity="center"
-    android:columnWidth="140dp"
-    android:stretchMode="columnWidth"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/colorPrimaryLight">
-</GridView>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/movie_overview_grid"
+        android:numColumns="auto_fit"
+        android:gravity="center"
+        android:columnWidth="140dp"
+        android:stretchMode="columnWidth"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimaryLight">
+    </GridView>
+
+    <LinearLayout
+        android:id="@+id/no_network_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/colorPrimaryLight"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="@string/grid_no_internet_warning"/>
+        <Button
+            android:id="@+id/jump_to_favourites_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@android:color/white"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="@string/grid_no_internet_favourites_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_movies_available"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/colorPrimaryLight"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="@string/grid_no_movies_warning"/>
+
+    </LinearLayout>
+</FrameLayout>
+
 
 
 

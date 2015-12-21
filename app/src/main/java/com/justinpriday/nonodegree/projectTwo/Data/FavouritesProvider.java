@@ -4,6 +4,8 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -20,7 +22,8 @@ public class FavouritesProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        mOpenHelper = new MovieDBHelper(getContext());
+        return true;
     }
 
     static UriMatcher buildUriMatcher() {
@@ -59,7 +62,14 @@ public class FavouritesProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(Uri uri) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case FAVOURITES:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
     }
 
     @Nullable
