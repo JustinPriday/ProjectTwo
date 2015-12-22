@@ -54,16 +54,6 @@ public class MovieAdapter extends ArrayAdapter<MovieData> {
         holder.popularityText.setText(String.format("%.0f",movieData.popularity));
         holder.ratingText.setText(String.format("%.1f / 10",movieData.voteAverage));
 
-        boolean movieFavourited = getContext().getContentResolver().query(
-                MovieContract.MovieEntry.CONTENT_URI,
-                null,
-                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
-                new String[]{String.format("%d",movieData.id)},
-                null
-        ).moveToFirst();
-
-        holder.favouriteIcon.setVisibility((movieFavourited)?View.VISIBLE:View.INVISIBLE);
-
         return convertView;
     }
 
@@ -71,7 +61,6 @@ public class MovieAdapter extends ArrayAdapter<MovieData> {
         @Bind(R.id.grid_item_image_poster) ImageView moviePoster;
         @Bind(R.id.movie_grid_popularity_text_view) TextView popularityText;
         @Bind(R.id.movie_grid_rating_text_view) TextView ratingText;
-        @Bind(R.id.grid_item_favourite_icon) ImageView favouriteIcon;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

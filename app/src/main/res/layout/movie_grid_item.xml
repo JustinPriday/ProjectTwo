@@ -53,8 +53,7 @@
                     android:textSize="10sp"
                     android:layout_marginRight="4dp"
                     android:layout_gravity="center"
-                    android:gravity="left"
-                    android:visibility="invisible"/>
+                    android:gravity="left"/>
 
             </LinearLayout>
 
